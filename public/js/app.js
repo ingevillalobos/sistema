@@ -34386,7 +34386,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 console.log(error);
             });
         },
-        desactivarCategoria: function desactivarCategoria(id) {
+        desactivarArticulo: function desactivarArticulo(id) {
             var _this = this;
 
             var swalWithBootstrapButtons = swal.mixin({
@@ -34395,7 +34395,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 buttonsStyling: false
             });
             swalWithBootstrapButtons({
-                title: 'Estas seguro de desactivar esta categoria?',
+                title: 'Estas seguro de desactivar este articulo?',
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Aceptar',
@@ -34405,10 +34405,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 if (result.value) {
                     var me = _this;
 
-                    axios.put('/categoria/desactivar', {
+                    axios.put('/articulo/desactivar', {
                         'id': id
                     }).then(function (response) {
-                        me.listarCategoria(1, '', 'nombre');
+                        me.listarArticulo(1, '', 'nombre');
                         swalWithBootstrapButtons('Desactivado!', 'El registro ha sido desactivado con exito.', 'success');
                     }).catch(function (error) {
                         console.log(error);
@@ -34418,7 +34418,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 result.dismiss === swal.DismissReason.cancel) {}
             });
         },
-        activarCategoria: function activarCategoria(id) {
+        activarArticulo: function activarArticulo(id) {
             var _this2 = this;
 
             var swalWithBootstrapButtons = swal.mixin({
@@ -34427,7 +34427,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 buttonsStyling: false
             });
             swalWithBootstrapButtons({
-                title: 'Estas seguro de activar esta categoria?',
+                title: 'Estas seguro de activar este articulo?',
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Aceptar',
@@ -34437,10 +34437,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 if (result.value) {
                     var me = _this2;
 
-                    axios.put('/categoria/activar', {
+                    axios.put('/articulo/activar', {
                         'id': id
                     }).then(function (response) {
-                        me.listarCategoria(1, '', 'nombre');
+                        me.listarArticulo(1, '', 'nombre');
                         swalWithBootstrapButtons('Activado!', 'El registro ha sido activado con exito.', 'success');
                     }).catch(function (error) {
                         console.log(error);
@@ -34686,7 +34686,7 @@ var render = function() {
                                   attrs: { type: "button" },
                                   on: {
                                     click: function($event) {
-                                      _vm.desactivarCategoria(articulo.id)
+                                      _vm.desactivarArticulo(articulo.id)
                                     }
                                   }
                                 },
@@ -34701,7 +34701,7 @@ var render = function() {
                                   attrs: { type: "button" },
                                   on: {
                                     click: function($event) {
-                                      _vm.activarCategoria(articulo.id)
+                                      _vm.activarArticulo(articulo.id)
                                     }
                                   }
                                 },
