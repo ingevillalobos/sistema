@@ -34331,7 +34331,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var me = this;
             var url = '/categoria/selectCategoria';
             axios.get(url).then(function (response) {
-                console.log(response);
                 var respuesta = response.data;
                 me.arrayCategoria = respuesta.categorias;
             }).catch(function (error) {
@@ -34344,37 +34343,45 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             me.pagination.current_page = page;
             me.listarArticulo(page, buscar, criterio);
         },
-        registrarCategoria: function registrarCategoria() {
-            if (this.validarCategoria()) {
+        registrarArticulo: function registrarArticulo() {
+            if (this.validarArticulo()) {
                 return;
             }
 
             var me = this;
 
-            axios.post('/categoria/registrar', {
+            axios.post('/articulo/registrar', {
+                'idcategoria': this.idcategoria,
+                'codigo': this.codigo,
                 'nombre': this.nombre,
+                'stock': this.stock,
+                'precio_venta': this.precio_venta,
                 'descripcion': this.descripcion
             }).then(function (response) {
                 me.cerrarModal();
-                me.listarCategoria(1, '', 'nombre');
+                me.listarArticulo(1, '', 'nombre');
             }).catch(function (error) {
                 console.log(error);
             });
         },
-        actualizarCategoria: function actualizarCategoria() {
-            if (this.validarCategoria()) {
+        actualizarArticulo: function actualizarArticulo() {
+            if (this.validarArticulo()) {
                 return;
             }
 
             var me = this;
 
-            axios.put('/categoria/actualizar', {
+            axios.put('/articulo/actualizar', {
+                'idcategoria': this.idcategoria,
+                'codigo': this.codigo,
                 'nombre': this.nombre,
+                'stock': this.stock,
+                'precio_venta': this.precio_venta,
                 'descripcion': this.descripcion,
-                'id': this.categoria_id
+                'id': this.articulo_id
             }).then(function (response) {
                 me.cerrarModal();
-                me.listarCategoria(1, '', 'nombre');
+                me.listarArticulo(1, '', 'nombre');
             }).catch(function (error) {
                 console.log(error);
             });
@@ -34443,21 +34450,29 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 result.dismiss === swal.DismissReason.cancel) {}
             });
         },
-        validarCategoria: function validarCategoria() {
-            this.errorCategoria = 0;
-            this.errorMostrarMsjCategoria = [];
+        validarArticulo: function validarArticulo() {
+            this.errorArticulo = 0;
+            this.errorMostrarMsjArticulo = [];
+            if (this.idcategoria == 0) this.errorMostrarMsjArticulo.push("Seleccione una categoria.");
+            if (!this.nombre) this.errorMostrarMsjArticulo.push("El nombre del articulo no puede estar vacío.");
+            if (!this.stock) this.errorMostrarMsjArticulo.push("El stock del articulo debe ser un numero y no puede estar vacio.");
+            if (!this.precio_venta) this.errorMostrarMsjArticulo.push("El precio de venta del articulo debe ser un numero y no puede estar vacio.");
 
-            if (!this.nombre) this.errorMostrarMsjCategoria.push("El nombre de la categoría no puede estar vacío.");
+            if (this.errorMostrarMsjArticulo.length) this.errorArticulo = 1;
 
-            if (this.errorMostrarMsjCategoria.length) this.errorCategoria = 1;
-
-            return this.errorCategoria;
+            return this.errorArticulo;
         },
         cerrarModal: function cerrarModal() {
             this.modal = 0;
             this.tituloModal = '';
+            this.idcategoria = 0;
+            this.nombre_categoria = '';
+            this.codigo = '';
             this.nombre = '';
+            this.precio_venta = 0;
+            this.stock = 0;
             this.descripcion = '';
+            this.errorArticulo = 0;
         },
         abrirModal: function abrirModal(modelo, accion) {
             var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
@@ -34471,7 +34486,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                                 {
                                     this.modal = 1;
                                     this.tituloModal = 'Registrar Articulo';
+                                    this.idcategoria = 0;
+                                    this.nombre_categoria = '';
+                                    this.codigo = '';
                                     this.nombre = '';
+                                    this.precio_venta = 0;
+                                    this.stock = 0;
                                     this.descripcion = '';
                                     this.tipoAccion = 1;
                                     break;
@@ -34482,8 +34502,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                                     this.modal = 1;
                                     this.tituloModal = 'Actualizar Articulo';
                                     this.tipoAccion = 2;
-                                    this.categoria_id = data['id'];
+                                    this.articulo_id = data['id'];
+                                    this.idcategoria = data['idcategoria'];
+                                    this.codigo = data['codigo'];
                                     this.nombre = data['nombre'];
+                                    this.stock = data['stock'];
+                                    this.precio_venta = data['precio_venta'];
                                     this.descripcion = data['descripcion'];
                                     break;
                                 }
@@ -35095,8 +35119,8 @@ var render = function() {
                         _c("input", {
                           directives: [
                             {
-                              name: "model...",
-                              rawName: "v-model...",
+                              name: "model",
+                              rawName: "v-model",
                               value: _vm.descripcion,
                               expression: "descripcion"
                             }
@@ -35105,6 +35129,15 @@ var render = function() {
                           attrs: {
                             type: "email",
                             placeholder: "Ingrese descripción"
+                          },
+                          domProps: { value: _vm.descripcion },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.descripcion = $event.target.value
+                            }
                           }
                         })
                       ])
@@ -35163,7 +35196,7 @@ var render = function() {
                         attrs: { type: "button" },
                         on: {
                           click: function($event) {
-                            _vm.registrarCategoria()
+                            _vm.registrarArticulo()
                           }
                         }
                       },
@@ -35179,7 +35212,7 @@ var render = function() {
                         attrs: { type: "button" },
                         on: {
                           click: function($event) {
-                            _vm.actualizarCategoria()
+                            _vm.actualizarArticulo()
                           }
                         }
                       },
