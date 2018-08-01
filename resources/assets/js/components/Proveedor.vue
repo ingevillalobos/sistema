@@ -64,10 +64,10 @@
                                     <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page - 1,buscar,criterio)">Ant</a>
                                 </li>
                                 <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActive ? 'active' : '']">
-                                    <a class="page-link" href="#" @click.prevent="cabiarPagina(page,buscar,criterio)" v-text="page"></a>
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(page,buscar,criterio)" v-text="page"></a>
                                 </li>
                                 <li class="page-item" v-if="pagination.current_page < pagination.last_page">
-                                    <a class="page-link" href="#" @click.prevent="cabiarPagina(pagination.current_page + 1,buscar,criterio)">Sig</a>
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page + 1,buscar,criterio)">Sig</a>
                                 </li>
                             </ul>
                         </nav>
@@ -88,9 +88,9 @@
                         <div class="modal-body">
                             <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Nombre</label>
+                                    <label class="col-md-3 form-control-label" for="text-input">Nombre (*)</label>
                                     <div class="col-md-9">
-                                        <input type="text" v-model="nombre" class="form-control" placeholder="Nombre de la persona">
+                                        <input type="text" v-model="nombre" class="form-control" placeholder="Nombre de la empresa">
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -127,9 +127,21 @@
                                         <input type="email" v-model="email" class="form-control" placeholder="Email">
                                     </div>
                                 </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="text-input">Contacto</label>
+                                    <div class="col-md-9">
+                                        <input type="text" v-model="contacto" class="form-control" placeholder="Nombre de contacto">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="text-input">Telefono de contacto</label>
+                                    <div class="col-md-9">
+                                        <input type="text" v-model="telefono_contacto" class="form-control" placeholder="Telefono del contacto">
+                                    </div>
+                                </div>
                                 <div v-show="errorPersona" class="form-group row div-error">
                                     <div class="text-center text-error">
-                                        <div v-for="error in errorMostrarMsjCategoria" :key="error" v-text="error">
+                                        <div v-for="error in errorMostrarMsjPersona" :key="error" v-text="error">
 
                                         </div>
                                     </div>
@@ -223,7 +235,7 @@
                     console.log(error);
                 });
             },
-            cabiarPagina(page,buscar,criterio){
+            cambiarPagina(page,buscar,criterio){
                 let me = this;
                 //Actualiza la pagina actual
                 me.pagination.current_page = page;
@@ -236,13 +248,15 @@
                 
                 let me = this;
 
-                axios.post('/cliente/registrar',{
+                axios.post('/proveedor/registrar',{
                     'nombre': this.nombre,
                     'tipo_documento': this.tipo_documento,
                     'num_documento': this.num_documento,
                     'direccion': this.direccion,
                     'telefono': this.telefono,
-                    'email': this.email
+                    'email': this.email,
+                    'contacto': this.contacto,
+                    'telefono_contacto': this.telefono_contacto
                 }).then(function (response) {
                     me.cerrarModal();
                     me.listarPersona(1,'','nombre');
@@ -257,13 +271,15 @@
                 
                 let me = this;
 
-                axios.put('/cliente/actualizar',{
+                axios.put('/proveedor/actualizar',{
                     'nombre': this.nombre,
                     'tipo_documento': this.tipo_documento,
                     'num_documento': this.num_documento,
                     'direccion': this.direccion,
                     'telefono': this.telefono,
                     'email': this.email,
+                    'contacto': this.contacto,
+                    'telefono_contacto': this.telefono_contacto,
                     'id': this.persona_id
                 }).then(function (response) {
                     me.cerrarModal();
@@ -276,9 +292,9 @@
                 this.errorPersona=0;
                 this.errorMostrarMsjPersona =[];
 
-                if (!this.nombre) this.errorMostrarMsjCategoria.push("El nombre de la persona no puede estar vacío.");
+                if (!this.nombre) this.errorMostrarMsjPersona.push("El nombre de la persona no puede estar vacío.");
 
-                if (this.errorMostrarMsjPersona.length) this.errorCategoria = 1;
+                if (this.errorMostrarMsjPersona.length) this.errorPersona = 1;
 
                 return this.errorPersona;
             },
@@ -286,12 +302,15 @@
                 this.modal=0;
                 this.tituloModal='';
                 this.nombre='';
-                this.tipo_documento='DNI';
+                this.tipo_documento='RUC';
                 this.num_documento='';
                 this.direccion='';
                 this.telefono='';
                 this.email='';
+                this.contacto='';
+                this.telefono_contacto='';
                 this.errorPersona=0;
+
             },
             abrirModal(modelo, accion, data = []){
                 switch(modelo){
@@ -301,13 +320,15 @@
                             case 'registrar':
                             {
                                 this.modal = 1;
-                                this.tituloModal = 'Registrar Cliente';
+                                this.tituloModal = 'Registrar Proveedor';
                                 this.nombre='';
-                                this.tipo_documento='DNI';
+                                this.tipo_documento='RUC';
                                 this.num_documento='';
                                 this.direccion='';
                                 this.telefono='';
                                 this.email='';
+                                this.contacto='';
+                                this.telefono_contacto='';
                                 this.tipoAccion = 1;
                                 break;
                             }
@@ -315,7 +336,7 @@
                             {
                                 //console.log(data);
                                 this.modal=1;
-                                this.tituloModal='Actualizar Cliente';
+                                this.tituloModal='Actualizar Proveedor';
                                 this.tipoAccion=2;
                                 this.persona_id=data['id'];
                                 this.nombre = data['nombre'];
@@ -324,6 +345,8 @@
                                 this.direccion= data['direccion'];
                                 this.telefono= data['telefono'];
                                 this.email= data['email'];
+                                this.contacto= data['contacto'];
+                                this.telefono_contacto= data['telefono_contacto'];
                                 break;
                             }
                         }
