@@ -8,8 +8,8 @@
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
-                        <i class="fa fa-align-justify"></i> Categorías
-                        <button type="button" @click="abrirModal('categoria','registrar')" class="btn btn-secondary">
+                        <i class="fa fa-align-justify"></i> Roles
+                        <button type="button" @click="abrirModal('rol','registrar')" class="btn btn-secondary">
                             <i class="icon-plus"></i>&nbsp;Nuevo
                         </button>
                     </div>
@@ -21,8 +21,8 @@
                                       <option value="nombre">Nombre</option>
                                       <option value="descripcion">Descripción</option>
                                     </select>
-                                    <input type="text" v-model="buscar" @keyup.enter="listarCategoria(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
-                                    <button type="submit" @click="listarCategoria(1,buscar,criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+                                    <input type="text" v-model="buscar" @keyup.enter="listarRol(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
+                                    <button type="submit" @click="listarRol(1,buscar,criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                                 </div>
                             </div>
                         </div>
@@ -36,26 +36,26 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="categoria in arrayCategoria" :key="categoria.id">
+                                <tr v-for="rol in arrayRol" :key="rol.id">
                                     <td>
-                                        <button type="button" @click="abrirModal('categoria','actualizar',categoria)" class="btn btn-warning btn-sm">
+                                        <button type="button" @click="abrirModal('rol','actualizar',rol)" class="btn btn-warning btn-sm">
                                           <i class="icon-pencil"></i>
                                         </button> &nbsp;
-                                  <template v-if="categoria.condicion">
-                                      <button type="button" class="btn btn-danger btn-sm" @click="desactivarCategoria(categoria.id)">
+                                  <template v-if="rol.condicion">
+                                      <button type="button" class="btn btn-danger btn-sm" @click="desactivarRol(rol.id)">
                                           <i class="icon-trash"></i>
                                       </button>
                                   </template>
                                   <template v-else>
-                                      <button type="button" class="btn btn-info btn-sm" @click="activarCategoria(categoria.id)">
+                                      <button type="button" class="btn btn-info btn-sm" @click="activarRol(rol.id)">
                                           <i class="icon-check"></i>
                                       </button>
                                   </template>
                                     </td>
-                                    <td v-text="categoria.nombre"></td>
-                                    <td v-text="categoria.descripcion"></td>
+                                    <td v-text="rol.nombre"></td>
+                                    <td v-text="rol.descripcion"></td>
                                     <td>
-                                        <div v-if="categoria.condicion">
+                                        <div v-if="rol.condicion">
                                             <span class="badge badge-success">Activo</span>
                                         </div>
                                         <div v-else>
@@ -108,9 +108,9 @@
                                         <input type="text" v-model="descripcion" class="form-control" placeholder="Ingrese descripción">
                                     </div>
                                 </div>
-                                <div v-show="errorCategoria" class="form-group row div-error">
+                                <div v-show="errorRol" class="form-group row div-error">
                                     <div class="text-center text-error">
-                                        <div v-for="error in errorMostrarMsjCategoria" :key="error" v-text="error">
+                                        <div v-for="error in errorMostrarMsjRol" :key="error" v-text="error">
 
                                         </div>
                                     </div>
@@ -120,8 +120,8 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
-                            <button type="button" v-if="tipoAccion==1" class="btn btn-primary" @click="registrarCategoria()">Guardar</button>
-                            <button type="button" v-if="tipoAccion==2" class="btn btn-primary" @click="actualizarCategoria()">Actualizar</button>
+                            <button type="button" v-if="tipoAccion==1" class="btn btn-primary" @click="registrarRol()">Guardar</button>
+                            <button type="button" v-if="tipoAccion==2" class="btn btn-primary" @click="actualizarRol()">Actualizar</button>
                         </div>
                     </div>
                     <!-- /.modal-content -->
@@ -136,15 +136,15 @@
     export default {
         data (){
             return {
-                categoria_id: 0,
+                rol_id: 0,
                 nombre : '',
                 descripcion : '',
-                arrayCategoria : [],
+                arrayRol : [],
                 modal : 0,
                 tituloModal : '',
                 tipoAccion : 0,
-                errorCategoria : 0,
-                errorMostrarMsjCategoria : [],
+                errorRol : 0,
+                errorMostrarMsjRol : [],
                 pagination: {
                     'total' : 0,
                     'current_page': 0,
@@ -186,12 +186,12 @@
             }
         },
         methods : {
-            listarCategoria (page,buscar,criterio){
+            listarRol (page,buscar,criterio){
                 let me=this;
-                var url = '/categoria?page=' + page + '&buscar='+ buscar + '&criterio='+ criterio;
+                var url = '/rol?page=' + page + '&buscar='+ buscar + '&criterio='+ criterio;
                 axios.get(url).then(function (response) {
                     var respuesta = response.data;
-                    me.arrayCategoria = respuesta.categorias.data;
+                    me.arrayRol = respuesta.roles.data;
                     me.pagination = respuesta.pagination;
                 })
                 .catch(function (error) {
@@ -202,51 +202,51 @@
                 let me = this;
                 //Actualiza la pagina actual
                 me.pagination.current_page = page;
-                me.listarCategoria(page,buscar,criterio);
+                me.listarRol(page,buscar,criterio);
             },
-            registrarCategoria(){
-                if (this.validarCategoria()){
+            registrarRol(){
+                if (this.validarRol()){
                     return;
                 }
                 
                 let me = this;
 
-                axios.post('/categoria/registrar',{
+                axios.post('/rol/registrar',{
                     'nombre': this.nombre,
                     'descripcion': this.descripcion
                 }).then(function (response) {
                     me.cerrarModal();
-                    me.listarCategoria(1,'','nombre');
+                    me.listarRol(1,'','nombre');
                 }).catch(function (error) {
                     console.log(error);
                 });
             },
-            actualizarCategoria(){
-               if (this.validarCategoria()){
+            actualizarRol(){
+               if (this.validarRol()){
                     return;
                 }
                 
                 let me = this;
 
-                axios.put('/categoria/actualizar',{
+                axios.put('/rol/actualizar',{
                     'nombre': this.nombre,
                     'descripcion': this.descripcion,
-                    'id': this.categoria_id
+                    'id': this.rol_id
                 }).then(function (response) {
                     me.cerrarModal();
-                    me.listarCategoria(1,'','nombre');
+                    me.listarRol(1,'','nombre');
                 }).catch(function (error) {
                     console.log(error);
                  }); 
             },
-            desactivarCategoria(id){
+            desactivarRol(id){
                 const swalWithBootstrapButtons = swal.mixin({
                 confirmButtonClass: 'btn btn-success',
                 cancelButtonClass: 'btn btn-danger',
                 buttonsStyling: false,
                 })
                 swalWithBootstrapButtons({
-                title: 'Estas seguro de desactivar esta categoria?',
+                title: 'Estas seguro de desactivar este rol?',
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Aceptar',
@@ -256,10 +256,10 @@
                 if (result.value) {
                         let me = this;
 
-                    axios.put('/categoria/desactivar',{
+                    axios.put('/rol/desactivar',{
                     'id': id
                     }).then(function (response) {
-                        me.listarCategoria(1,'','nombre');
+                        me.listarRol(1,'','nombre');
                          swalWithBootstrapButtons(
                     'Desactivado!',
                     'El registro ha sido desactivado con exito.',
@@ -276,14 +276,14 @@
                 }
                 })
             },
-            activarCategoria(id){
+            activarRol(id){
                 const swalWithBootstrapButtons = swal.mixin({
                 confirmButtonClass: 'btn btn-success',
                 cancelButtonClass: 'btn btn-danger',
                 buttonsStyling: false,
                 })
                 swalWithBootstrapButtons({
-                title: 'Estas seguro de activar esta categoria?',
+                title: 'Estas seguro de activar este rol?',
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Aceptar',
@@ -293,10 +293,10 @@
                 if (result.value) {
                         let me = this;
 
-                    axios.put('/categoria/activar',{
+                    axios.put('/rol/activar',{
                     'id': id
                     }).then(function (response) {
-                        me.listarCategoria(1,'','nombre');
+                        me.listarRol(1,'','nombre');
                          swalWithBootstrapButtons(
                     'Activado!',
                     'El registro ha sido activado con exito.',
@@ -313,15 +313,15 @@
                 }
                 })
             },
-            validarCategoria(){
-                this.errorCategoria=0;
-                this.errorMostrarMsjCategoria =[];
+            validarRol(){
+                this.errorRol=0;
+                this.errorMostrarMsjRol =[];
 
-                if (!this.nombre) this.errorMostrarMsjCategoria.push("El nombre de la categoría no puede estar vacío.");
+                if (!this.nombre) this.errorMostrarMsjRol.push("El nombre del rol no puede estar vacío.");
 
-                if (this.errorMostrarMsjCategoria.length) this.errorCategoria = 1;
+                if (this.errorMostrarMsjRol.length) this.errorRol = 1;
 
-                return this.errorCategoria;
+                return this.errorRol;
             },
             cerrarModal(){
                 this.modal=0;
@@ -331,13 +331,13 @@
             },
             abrirModal(modelo, accion, data = []){
                 switch(modelo){
-                    case "categoria":
+                    case "rol":
                     {
                         switch(accion){
                             case 'registrar':
                             {
                                 this.modal = 1;
-                                this.tituloModal = 'Registrar Categoría';
+                                this.tituloModal = 'Registrar Rol';
                                 this.nombre= '';
                                 this.descripcion = '';
                                 this.tipoAccion = 1;
@@ -347,9 +347,9 @@
                             {
                                 //console.log(data);
                                 this.modal=1;
-                                this.tituloModal='Actualizar categoría';
+                                this.tituloModal='Actualizar Rol';
                                 this.tipoAccion=2;
-                                this.categoria_id=data['id'];
+                                this.rol_id=data['id'];
                                 this.nombre = data['nombre'];
                                 this.descripcion= data['descripcion'];
                                 break;
@@ -360,7 +360,7 @@
             }
         },
         mounted() {
-            this.listarCategoria(1,this.buscar,this.criterio);
+            this.listarRol(1,this.buscar,this.criterio);
         }
     }
 </script>

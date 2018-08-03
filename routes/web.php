@@ -37,3 +37,7 @@ Route::post('/proveedor/registrar', 'ProveedorController@store');
 Route::put('/proveedor/actualizar', 'ProveedorController@update');
 
 Route::get('/rol', 'RolController@index');
+Route::post('/rol/registrar', 'RolController@store');
+Route::put('/rol/actualizar', 'RolController@update');
+Route::put('/rol/desactivar', 'RolController@desactivar');
+Route::put('/rol/activar', 'RolController@activar');

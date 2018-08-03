@@ -35,4 +35,54 @@ class RolController extends Controller
             'roles' => $roles
         ];
     }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        if(!$request->ajax()) return redirect('/');
+        $rol = new Rol();
+        $rol->nombre = $request->nombre;
+        $rol->descripcion = $request->descripcion;
+        $rol->condicion = '1';
+        $rol->save();
+    }
+  
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request)
+    {
+        if(!$request->ajax()) return redirect('/');
+        $rol = Rol::findOrFail($request->id);
+        $rol->nombre = $request->nombre;
+        $rol->descripcion = $request->descripcion;
+        $rol->condicion = '1';
+        $rol->save();
+    }
+
+    public function desactivar(Request $request)
+    {
+        if(!$request->ajax()) return redirect('/');
+        $rol = Rol::findOrFail($request->id);
+        $rol->condicion = '0';
+        $rol->save();
+    }
+
+    public function activar(Request $request)
+    {
+        if(!$request->ajax()) return redirect('/');
+        $rol = Rol::findOrFail($request->id);
+        $rol->condicion = '1';
+        $rol->save();
+    }
 }
