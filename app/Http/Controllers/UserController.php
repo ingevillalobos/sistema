@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+
+
 use App\User;
-use App\persona;
-use Illuminate\Support\Fecades\DB;
+use App\Persona;
+use DB;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
