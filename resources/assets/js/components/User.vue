@@ -40,6 +40,7 @@
                                     <th>Email</th>
                                     <th>Usuario</th>
                                     <th>Rol</th>
+                                    <th>Estado</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -47,7 +48,18 @@
                                     <td>
                                         <button type="button" @click="abrirModal('persona','actualizar',persona)" class="btn btn-warning btn-sm">
                                           <i class="icon-pencil"></i>
-                                        </button> 
+                                        </button>
+                                        &nbsp;
+                                  <template v-if="persona.condicion">
+                                      <button type="button" class="btn btn-danger btn-sm" @click="desactivarUsuario(persona.id)">
+                                          <i class="icon-trash"></i>
+                                      </button>
+                                  </template>
+                                  <template v-else>
+                                      <button type="button" class="btn btn-info btn-sm" @click="activarUsuario(persona.id)">
+                                          <i class="icon-check"></i>
+                                      </button>
+                                  </template>
                                     </td>
                                     <td v-text="persona.nombre"></td>
                                     <td v-text="persona.tipo_documento"></td>
@@ -57,6 +69,14 @@
                                     <td v-text="persona.email"></td>
                                     <td v-text="persona.usuario"></td>
                                     <td v-text="persona.rol"></td>
+                                    <td>
+                                         <div v-if="persona.condicion">
+                                            <span class="badge badge-success">Activo</span>
+                                        </div>
+                                        <div v-else>
+                                            <span class="badge badge-danger">Desactivado</span>
+                                        </div>
+                                    </td>
                                 </tr>                                
                             </tbody>
                         </table>
@@ -317,13 +337,87 @@
                     console.log(error);
                  }); 
             },
+            desactivarUsuario(id){
+                const swalWithBootstrapButtons = swal.mixin({
+                confirmButtonClass: 'btn btn-success',
+                cancelButtonClass: 'btn btn-danger',
+                buttonsStyling: false,
+                })
+                swalWithBootstrapButtons({
+                title: 'Estas seguro de desactivar este usuario?',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Aceptar',
+                cancelButtonText: 'Cancelar',
+                reverseButtons: true
+                }).then((result) => {
+                if (result.value) {
+                        let me = this;
+
+                    axios.put('/user/desactivar',{
+                    'id': id
+                    }).then(function (response) {
+                        me.listarPersona(1,'','nombre');
+                         swalWithBootstrapButtons(
+                    'Desactivado!',
+                    'El registro ha sido desactivado con exito.',
+                    'success'
+                    )
+                    }).catch(function (error) {
+                        console.log(error);
+                    }); 
+                } else if (
+                    // Read more about handling dismissals
+                    result.dismiss === swal.DismissReason.cancel
+                ) {
+                
+                }
+                })
+            },
+            activarUsuario(id){
+                const swalWithBootstrapButtons = swal.mixin({
+                confirmButtonClass: 'btn btn-success',
+                cancelButtonClass: 'btn btn-danger',
+                buttonsStyling: false,
+                })
+                swalWithBootstrapButtons({
+                title: 'Estas seguro de activar este usuario?',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Aceptar',
+                cancelButtonText: 'Cancelar',
+                reverseButtons: true
+                }).then((result) => {
+                if (result.value) {
+                        let me = this;
+
+                    axios.put('/user/activar',{
+                    'id': id
+                    }).then(function (response) {
+                        me.listarPersona(1,'','nombre');
+                         swalWithBootstrapButtons(
+                    'Activado!',
+                    'El registro ha sido activado con exito.',
+                    'success'
+                    )
+                    }).catch(function (error) {
+                        console.log(error);
+                    }); 
+                } else if (
+                    // Read more about handling dismissals
+                    result.dismiss === swal.DismissReason.cancel
+                ) {
+                
+                }
+                })
+            },
             validarPersona(){
                 this.errorPersona=0;
                 this.errorMostrarMsjPersona =[];
 
                 if (!this.nombre) this.errorMostrarMsjPersona.push("El nombre de la persona no puede estar vacío.");
                 if (!this.usuario) this.errorMostrarMsjPersona.push("El nombre del usuario no puede estar vacío.");
-                if (!this.password) this.errorMostrarMsjPersona.push("El password no puede estar vacío.");
+                //if (!this.password) this.errorMostrarMsjPersona.push("El password no puede estar vacío.");
                 if (this.rol==0) this.errorMostrarMsjPersona.push("Debes seleccionar un rol para el usuario.");
                 if (this.errorMostrarMsjPersona.length) this.errorPersona = 1;
                 return this.errorPersona;
