@@ -41,6 +41,7 @@ Route::post('/rol/registrar', 'RolController@store');
 Route::put('/rol/actualizar', 'RolController@update');
 Route::put('/rol/desactivar', 'RolController@desactivar');
 Route::put('/rol/activar', 'RolController@activar');
+Route::get('/rol/selectRol', 'RolController@selectRol');
 
 Route::get('/user', 'UserController@index');
 Route::post('/user/registrar', 'UserController@store');
