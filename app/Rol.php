@@ -12,4 +12,8 @@ class Rol extends Model
         'descripcion',
         'condicion'
     ];
+
+    public function users(){
+        return $this->hasMany('App\User');
+    }
 }
