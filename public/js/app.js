@@ -43365,7 +43365,7 @@ var render = function() {
                           staticClass: "form-control",
                           attrs: {
                             type: "text",
-                            placeholder: "Nombre de la empresa"
+                            placeholder: "Nombre de usuario"
                           },
                           domProps: { value: _vm.nombre },
                           on: {
