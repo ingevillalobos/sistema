@@ -36,7 +36,7 @@ class UserController extends Controller
                 'personas.direccion','personas.telefono','personas.email','users.usuario','users.password',
                 'users.condicion','users.idrol','roles.nombre as rol')
             ->orderBy('personas.id','DESC')
-                ->where('personas.'.$criterio, 'LIKE', '%'.$buscar.'%')->orderBy('persona.id','DESC')
+                ->where('personas.'.$criterio, 'LIKE', '%'.$buscar.'%')->orderBy('personas.id','DESC')
                 ->paginate(3);
         }
 
