@@ -131,7 +131,7 @@
                          <div class="form-group row border">
                              <div class="col-md-6">
                                  <div class="form-group">
-                                     <label for="">Articulo</label>
+                                     <label for="">Articulo <span style="color:red;" v-show="idarticulo==0">(*Seleccione)</span></label>
                                      <div class="form-inline">
                                          <input type="text" class="form-control" v-model="codigo" @keyup.enter="buscarArticulo()" placeholder="Ingrese articulo">
                                          <button class="btn btn-primary">...</button>
@@ -141,13 +141,13 @@
                              </div>
                              <div class="col-md-2">
                                  <div class="form-group">
-                                     <label for="">Precio</label>
+                                     <label for="">Precio <span style="color:red;" v-show="precio==0">(*Ingrese)</span></label>
                                      <input type="number" value="0" step="any" class="form-control" v-model="precio">
                                  </div>
                              </div>
                               <div class="col-md-2">
                                  <div class="form-group">
-                                     <label for="">Cantidad</label>
+                                     <label for="">Cantidad <span style="color:red;" v-show="cantidad==0">(*Ingrese)</span></label>
                                      <input type="number" value="0" class="form-control" v-model="cantidad">
                                  </div>
                              </div>
@@ -377,14 +377,46 @@
                 me.pagination.current_page = page;
                 me.listarIngreso(page,buscar,criterio);
             },
+            encuentra(id){
+                var sw=0;
+                for(var i=0; i < this.arrayDetalle.length;i++){
+                    if(this.arrayDetalle[i].idarticulo==id){
+                        sw=true;
+                    }
+                }
+                return sw;
+            },
             agregarDetalle(){
                 let me = this;
-                me.arrayDetalle.push({
+                if(me.idarticulo==0 || me.cantidad==0 || me.precio==0){
+                }
+                else{
+                    if(me.encuentra(me.idarticulo)){
+                        swal({
+                            type: 'error',
+                            title: 'Error...',
+                            text: 'El articulo ya se encuentra agregado',
+                        })
+                          me.codigo="";
+                          me.idarticulo=0;
+                          me.articulo="";
+                          me.precio=0;
+                          me.cantidad=0;
+                    }
+                    else{
+                    me.arrayDetalle.push({
                     idarticulo: me.idarticulo,
                     articulo: me.articulo,
                     cantidad: me.cantidad,
                     precio: me.precio
-                });
+                    });
+                    me.codigo="";
+                    me.idarticulo=0;
+                    me.articulo="";
+                    me.precio=0;
+                    me.cantidad=0;
+                    }                  
+                }   
             },
             registrarPersona(){
                 if (this.validarPersona()){
