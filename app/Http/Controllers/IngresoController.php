@@ -69,10 +69,11 @@ class IngresoController extends Controller
             $ingreso->idproveedor = $request->idproveedor;
             $ingreso->idusuario = \Auth::user()->id;
             $ingreso->tipo_comprobante = $request->tipo_comprobante;
-            $ingresos->serie_comprobante = $request->serie_comprobante;
-            $ingreso->numero_comprobante = $request->num_comprobante;
+            $ingreso->serie_comprobante = $request->serie_comprobante;
+            $ingreso->num_comprobante = $request->num_comprobante;
             $ingreso->fecha_hora = $mytime->toDateString();
             $ingreso->impuesto = $request->impuesto;
+            $ingreso->total = $request->total;
             $ingreso->estado = 'Registrado';
             $ingreso->save();
 
@@ -89,8 +90,6 @@ class IngresoController extends Controller
             }
 
             DB::commit();
-
-
         }catch(Exception $e){
             DB::rollBack();
         }
