@@ -44259,6 +44259,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -44300,7 +44307,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             codigo: '',
             articulo: '',
             precio: 0,
-            cantidad: 0
+            cantidad: 0,
+            condicion: 1
         };
     },
 
@@ -44528,7 +44536,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 console.log(error);
             });
         },
-        desactivarUsuario: function desactivarUsuario(id) {
+        desactivarIngreso: function desactivarIngreso(id) {
             var _this = this;
 
             var swalWithBootstrapButtons = swal.mixin({
@@ -44537,7 +44545,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 buttonsStyling: false
             });
             swalWithBootstrapButtons({
-                title: 'Estas seguro de desactivar este usuario?',
+                title: 'Estas seguro de desactivar este ingreso?',
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Aceptar',
@@ -44547,11 +44555,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 if (result.value) {
                     var me = _this;
 
-                    axios.put('/user/desactivar', {
+                    axios.put('/ingreso/desactivar', {
                         'id': id
                     }).then(function (response) {
-                        me.listarPersona(1, '', 'nombre');
-                        swalWithBootstrapButtons('Desactivado!', 'El registro ha sido desactivado con exito.', 'success');
+                        me.listarIngreso(1, '', 'num_comprobante');
+                        me.condicion = 0;
+                        swalWithBootstrapButtons('Anulado!', 'El ingreso ha sido desactivado con exito.', 'success');
                     }).catch(function (error) {
                         console.log(error);
                     });
@@ -44900,11 +44909,25 @@ var render = function() {
                                 }
                               }),
                               _vm._v(" "),
-                              _c("td", {
-                                domProps: {
-                                  textContent: _vm._s(ingreso.estado)
-                                }
-                              })
+                              _c("td", [
+                                _vm.condicion
+                                  ? _c("div", [
+                                      _c("span", {
+                                        staticClass: "badge badge-success",
+                                        domProps: {
+                                          textContent: _vm._s(ingreso.estado)
+                                        }
+                                      })
+                                    ])
+                                  : _c("div", [
+                                      _c("span", {
+                                        staticClass: "badge badge-danger",
+                                        domProps: {
+                                          textContent: _vm._s(ingreso.estado)
+                                        }
+                                      })
+                                    ])
+                              ])
                             ])
                           })
                         )

@@ -66,7 +66,14 @@
                                         <td v-text="ingreso.fecha_hora"></td>
                                         <td v-text="ingreso.total"></td>
                                         <td v-text="ingreso.impuesto"></td>
-                                        <td v-text="ingreso.estado"></td>
+                                        <td>
+                                            <div v-if="condicion">
+                                            <span class="badge badge-success" v-text="ingreso.estado"></span>
+                                        </div>
+                                        <div v-else>
+                                            <span class="badge badge-danger" v-text="ingreso.estado"></span>
+                                        </div>
+                                        </td>
                                     </tr>                                
                                 </tbody>
                             </table>
@@ -349,7 +356,8 @@
                     codigo: '',
                     articulo: '',
                     precio: 0,
-                    cantidad: 0
+                    cantidad: 0,
+                    condicion:1
                 }
             },
             components: {
@@ -582,14 +590,14 @@
                         console.log(error);
                     }); 
                 },
-                desactivarUsuario(id){
+                desactivarIngreso(id){
                     const swalWithBootstrapButtons = swal.mixin({
                     confirmButtonClass: 'btn btn-success',
                     cancelButtonClass: 'btn btn-danger',
                     buttonsStyling: false,
                     })
                     swalWithBootstrapButtons({
-                    title: 'Estas seguro de desactivar este usuario?',
+                    title: 'Estas seguro de desactivar este ingreso?',
                     type: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Aceptar',
@@ -599,13 +607,14 @@
                     if (result.value) {
                             let me = this;
 
-                        axios.put('/user/desactivar',{
+                        axios.put('/ingreso/desactivar',{
                         'id': id
                         }).then(function (response) {
-                            me.listarPersona(1,'','nombre');
+                            me.listarIngreso(1,'','num_comprobante');
+                            me.condicion=0;
                             swalWithBootstrapButtons(
-                        'Desactivado!',
-                        'El registro ha sido desactivado con exito.',
+                        'Anulado!',
+                        'El ingreso ha sido desactivado con exito.',
                         'success'
                         )
                         }).catch(function (error) {
