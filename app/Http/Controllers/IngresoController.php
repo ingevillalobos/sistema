@@ -104,4 +104,27 @@ class IngresoController extends Controller
         $ingreso->save();
     }
 
+    public function obtenerCabecera(Request $request){
+        if(!$request->ajax()) return redirect('/');
+        $id= $request->id;
+            $ingreso = Ingreso::join('personas','ingresos.idproveedor','=','personas.id')
+                ->join('users','ingresos.idusuario','=','users.id')
+                ->select('ingresos.id','ingresos.tipo_comprobante','ingresos.num_comprobante','ingresos.serie_comprobante',
+                    'ingresos.fecha_hora','ingresos.impuesto','ingresos.total','ingresos.estado','users.usuario','personas.nombre')
+                ->where('ingresos.id', '=', $id)
+                ->take(1)
+                ->get();
+        return ['ingreso' => $ingreso];
+    }
+
+    public function obtenerDetalles(Request $request){
+        if(!$request->ajax()) return redirect('/');
+        $id= $request->id;
+            $detalles = DetalleIngreso::join('articulos','detalle_ingresos.idarticulo','=','articulos.id')
+                ->select('detalle_ingresos.cantidad','detalle_ingresos.precio','articulos.nombre as articulo')
+                ->where('detalle_ingresos.idingreso', '=', $id)
+                ->get();
+        return ['detalles' => $detalles];
+    }
+
 }

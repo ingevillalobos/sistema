@@ -14,7 +14,7 @@
                             </button>
                         </div>
                         <!-- Listado -->
-                        <template v-if="listado">
+                        <template v-if="listado==1">
                         <div class="card-body">
                             <div class="form-group row">
                                 <div class="col-md-6">
@@ -48,7 +48,7 @@
                                 <tbody>
                                     <tr v-for="ingreso in arrayIngreso" :key="ingreso.id">
                                         <td>
-                                            <button type="button" @click="abrirModal('ingreso','actualizar',ingreso)" class="btn btn-success btn-sm">
+                                            <button type="button" @click="verIngreso(ingreso.id)" class="btn btn-success btn-sm">
                                             <i class="icon-eye"></i>
                                             </button>
                                             &nbsp;
@@ -67,7 +67,7 @@
                                         <td v-text="ingreso.total"></td>
                                         <td v-text="ingreso.impuesto"></td>
                                         <td>
-                                            <div v-if="condicion">
+                                            <div v-if="ingreso.estado=='Registrado'">
                                             <span class="badge badge-success" v-text="ingreso.estado"></span>
                                         </div>
                                         <div v-else>
@@ -95,7 +95,7 @@
                         </template>
                         <!-- Fin listado -->
                         <!-- Detalles-->
-                        <template v-else>
+                        <template v-else-if="listado==0">
                         <div class="card-body">
                             <div class="form-group row border">
                                 <div class="col-md-9">
@@ -235,6 +235,93 @@
                         </div>
                         </template>
                         <!-- Fin Detalles -->
+                        <!-- Ver ingreso -->
+                        <template v-else-if="listado==2">
+                        <div class="card-body">
+                            <div class="form-group row border">
+                                <div class="col-md-9">
+                                    <div class="form-group">
+                                        <label for="">Proveedor</label>
+                                      <p v-text="proveedor"></p>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                        <label for="">Impuesto</label>
+                                        <p v-text="impuesto"></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="">Tipo Comprobante</label>
+                                       <p v-text="tipo_comprobante"></p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="">Serie Comprobante</label>
+                                        <p v-text="serie_comprobante"></p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="">Numero Comprobante(*)</label>
+                                        <p v-text="num_comprobante"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row border">
+                                <div class="teable-responsive col-md-12">
+                                    <table class="table table-bordered table-striped table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>Articulo</th>
+                                                <th>Precio</th>
+                                                <th>Cantidad</th>
+                                                <th>Subtotal</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody v-if="arrayDetalle.length">
+                                            <tr v-for="detalle in arrayDetalle" :key="detalle.id">
+                                                <td v-text="detalle.articulo">                                                 
+                                                </td>
+                                                <td v-text="detalle.precio">
+                                                </td>
+                                                <td v-text="detalle.cantidad">
+                                                </td>
+                                                <td>
+                                                    {{ detalle.precio * detalle.cantidad}}
+                                                </td>
+                                            </tr>
+                                            <tr style="background-color: #CEECF5">
+                                                <td colspan="3" align="right"><strong>Total Parcial:</strong></td>
+                                                <td>$ {{totalParcial=(total-totalImpuesto).toFixed(2)}}</td>
+                                            </tr>
+                                            <tr style="background-color: #CEECF5">
+                                                <td colspan="3" align="right"><strong>Total Impuesto:</strong></td>
+                                                <td>$ {{totalImpuesto=((total*impuesto)).toFixed(2)}}</td>
+                                            </tr>
+                                                <tr style="background-color: #CEECF5">
+                                                <td colspan="3" align="right"><strong>Total:</strong></td>
+                                                <td>$ {{total}}</td>
+                                            </tr>
+                                        </tbody>
+                                        <tbody v-else>
+                                            <tr>
+                                                <td colspan="4">
+                                                    No hay articulos agregados
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-12">
+                                    <button type="button" @click="ocultarDetalle()" class="btn btn-secondary">Cerrar</button>
+                                </div>
+                            </div>
+                        </div>
+                        </template>
+                        <!-- Fin ver ingreso -->
                     </div>
                     <!-- Fin ejemplo de tabla Listado -->
                 </div>
@@ -322,6 +409,7 @@
                 return {
                     ingreso_id : 0,
                     idproveedor : '',
+                    proveedor: '',
                     tipo_comprobante:'BOLETA',
                     serie_comprobante: '',
                     num_comprobante:'',
@@ -357,7 +445,6 @@
                     articulo: '',
                     precio: 0,
                     cantidad: 0,
-                    condicion:1
                 }
             },
             components: {
@@ -606,12 +693,10 @@
                     }).then((result) => {
                     if (result.value) {
                             let me = this;
-
                         axios.put('/ingreso/desactivar',{
                         'id': id
                         }).then(function (response) {
                             me.listarIngreso(1,'','num_comprobante');
-                            me.condicion=0;
                             swalWithBootstrapButtons(
                         'Anulado!',
                         'El ingreso ha sido desactivado con exito.',
@@ -699,6 +784,41 @@
                 },
                 ocultarDetalle(){
                     this.listado = 1;
+                },
+                verIngreso(id){
+                    let me = this;
+                    me.listado = 2;
+
+                    //Obtener datos del ingreso
+                    var arrayIngresoTemp=[];
+                    var url = '/ingreso/obtenerCabecera?id=' + id;
+
+                    axios.get(url).then(function (response) {
+                        var respuesta = response.data;
+                        arrayIngresoTemp = respuesta.ingreso;
+                        
+                        me.proveedor = arrayIngresoTemp[0]['nombre'];
+                        me.tipo_comprobante = arrayIngresoTemp[0]['tipo_comprobante'];
+                        me.serie_comprobante = arrayIngresoTemp[0]['serie_comprobante'];
+                        me.num_comprobante = arrayIngresoTemp[0]['num_comprobante'];
+                        me.total = arrayIngresoTemp[0]['total'];
+                        me.impuesto = arrayIngresoTemp[0]['impuesto'];
+                        me.total = arrayIngresoTemp[0]['total'];
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+
+                    //Obtener los datos de los detalles
+                    var urldetalles = '/ingreso/obtenerDetalles?id=' + id;
+
+                    axios.get(urldetalles).then(function (response) {
+                        var respuesta = response.data;
+                        me.arrayDetalle = respuesta.detalles;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
                 },
                 abrirModal(){
                     this.arrayArticulo = [];
