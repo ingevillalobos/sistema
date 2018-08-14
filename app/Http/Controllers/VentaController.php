@@ -81,7 +81,7 @@ class VentaController extends Controller
             //Recorro todos los detalles
             foreach($detalles as $ep=>$det)
             {
-                $detalle = new DetalleIngreso();
+                $detalle = new DetalleVenta();
                 $detalle->idventa = $venta->id;
                 $detalle->idarticulo = $det['idarticulo'];
                 $detalle->cantidad = $det['cantidad'];
