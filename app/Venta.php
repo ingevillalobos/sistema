@@ -16,5 +16,5 @@ class Venta extends Model
         'impuesto',
         'total',
         'estado'
-    ]
+    ];
 }

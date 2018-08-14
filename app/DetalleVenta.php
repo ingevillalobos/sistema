@@ -13,5 +13,5 @@ class DetalleVenta extends Model
         'cantidad',
         'precio',
         'descuento'
-    ]
+    ];
 }
