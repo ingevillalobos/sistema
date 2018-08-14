@@ -64,6 +64,7 @@ Route::group(['middleware'=>['auth']],function()
         Route::put('/venta/desactivar', 'VentaController@desactivar');
         Route::get('/venta/obtenerCabecera', 'VentaController@obtenerCabecera');
         Route::get('/venta/obtenerDetalles', 'VentaController@obtenerDetalles');
+        Route::get('/cliente/selectCliente', 'ClienteController@selectCliente');
         
     });
  
@@ -98,6 +99,7 @@ Route::group(['middleware'=>['auth']],function()
         Route::get('/cliente', 'ClienteController@index');
         Route::post('/cliente/registrar', 'ClienteController@store');
         Route::put('/cliente/actualizar', 'ClienteController@update');
+        Route::get('/cliente/selectCliente', 'ClienteController@selectCliente');
        
         Route::get('/venta', 'VentaController@index');
         Route::post('/venta/registrar', 'VentaController@store');
