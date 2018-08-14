@@ -65,7 +65,9 @@ Route::group(['middleware'=>['auth']],function()
         Route::get('/venta/obtenerCabecera', 'VentaController@obtenerCabecera');
         Route::get('/venta/obtenerDetalles', 'VentaController@obtenerDetalles');
         Route::get('/cliente/selectCliente', 'ClienteController@selectCliente');
-        
+
+        Route::get('/articulo/buscarArticuloVenta', 'ArticuloController@buscarArticuloVenta');
+        Route::get('/articulo/listarArticuloVenta', 'ArticuloController@listarArticuloVenta');        
     });
  
     Route::group(['middleware' => ['Administrador']], function () {
@@ -84,6 +86,8 @@ Route::group(['middleware'=>['auth']],function()
         Route::put('/articulo/activar', 'ArticuloController@activar');
         Route::get('/articulo/buscarArticulo', 'ArticuloController@buscarArticulo');
         Route::get('/articulo/listarArticulo', 'ArticuloController@listarArticulo');
+        Route::get('/articulo/buscarArticuloVenta', 'ArticuloController@buscarArticuloVenta');
+        Route::get('/articulo/listarArticuloVenta', 'ArticuloController@listarArticuloVenta');  
  
         Route::get('/proveedor', 'ProveedorController@index');
         Route::post('/proveedor/registrar', 'ProveedorController@store');

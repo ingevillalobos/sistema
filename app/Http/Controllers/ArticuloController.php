@@ -45,7 +45,7 @@ class ArticuloController extends Controller
 
     public function listarArticulo(Request $request)
     {
-        //if(!$request->ajax()) return redirect('/');
+        if(!$request->ajax()) return redirect('/');
         $buscar = $request->buscar;
         $criterio = $request->criterio;
         if($buscar==''){
@@ -63,12 +63,46 @@ class ArticuloController extends Controller
         
         return ['articulos' => $articulos];
     } 
+
+    public function listarArticuloVenta(Request $request)
+    {
+        if(!$request->ajax()) return redirect('/');
+        $buscar = $request->buscar;
+        $criterio = $request->criterio;
+        if($buscar==''){
+        $articulos = Articulo::join('categorias','articulos.idcategoria', '=', 'categorias.id')
+        ->select('articulos.id','articulos.idcategoria','articulos.codigo','articulos.nombre','categorias.nombre as nombre_categoria','articulos.precio_venta','articulos.stock','articulos.descripcion','articulos.condicion')
+        ->where('articulos.stock', '>','0')
+        ->paginate(10);
+        }else{
+            $articulos = Articulo::join('categorias','articulos.idcategoria', '=', 'categorias.id')
+            ->select('articulos.id','articulos.idcategoria','articulos.codigo','articulos.nombre','categorias.nombre as nombre_categoria','articulos.precio_venta','articulos.stock','articulos.descripcion','articulos.condicion')
+            ->where('articulos.'.$criterio, 'LIKE', '%'.$buscar.'%')
+            ->where('articulos.stock', '>','0')
+            ->orderBy('articulos.id','DESC')
+            ->paginate(10);
+        }
+        
+        return ['articulos' => $articulos];
+    } 
     
     public function buscarArticulo(Request $request){
         if(!$request->ajax()) return redirect('/');
         $filtro = $request->filtro;
         $articulos = Articulo::where('codigo', '=', $filtro)
         ->select('id','nombre')->orderBy('nombre','ASC')->take(1)->get();
+        return ['articulos' => $articulos];
+    }
+
+    public function buscarArticuloVenta(Request $request){
+        if(!$request->ajax()) return redirect('/');
+        $filtro = $request->filtro;
+        $articulos = Articulo::where('codigo', '=', $filtro)
+        ->select('id','nombre','stock','precio_venta')
+        ->where('stock','>','0')
+        ->orderBy('nombre','ASC')
+        ->take(1)
+        ->get();
         return ['articulos' => $articulos];
     }
 

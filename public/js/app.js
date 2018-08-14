@@ -47018,7 +47018,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             articulo: '',
             precio: 0,
             cantidad: 0,
-            descuento: 0
+            descuento: 0,
+            stock: 0
         };
     },
 
@@ -47091,7 +47092,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         buscarArticulo: function buscarArticulo() {
             var me = this;
-            var url = '/articulo/buscarArticulo?filtro=' + me.codigo;
+            var url = '/articulo/buscarArticuloVenta?filtro=' + me.codigo;
             axios.get(url).then(function (response) {
                 var respuesta = response.data;
                 me.arrayArticulo = respuesta.articulos;
@@ -47099,6 +47100,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 if (me.arrayArticulo.length > 0) {
                     me.articulo = me.arrayArticulo[0]['nombre'];
                     me.idarticulo = me.arrayArticulo[0]['id'];
+                    me.precio = me.arrayArticulo[0]['precio_venta'];
+                    me.stock = me.arrayArticulo[0]['stock'];
                 } else {
                     me.articulo = 'No existe articulo';
                     me.idarticulo = 0;
@@ -47177,7 +47180,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         listarArticulo: function listarArticulo(buscar, criterio) {
             var me = this;
-            var url = '/articulo/listarArticulo?buscar=' + buscar + '&criterio=' + criterio;
+            var url = '/articulo/listarArticuloVenta?buscar=' + buscar + '&criterio=' + criterio;
             axios.get(url).then(function (response) {
                 var respuesta = response.data;
                 me.arrayArticulo = respuesta.articulos.data;
