@@ -712,14 +712,14 @@
                         console.log(error);
                     }); 
                 },
-                desactivarIngreso(id){
+                desactivarVenta(id){
                     const swalWithBootstrapButtons = swal.mixin({
                     confirmButtonClass: 'btn btn-success',
                     cancelButtonClass: 'btn btn-danger',
                     buttonsStyling: false,
                     })
                     swalWithBootstrapButtons({
-                    title: 'Estas seguro de desactivar este ingreso?',
+                    title: 'Estas seguro de desactivar esta venta?',
                     type: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Aceptar',
@@ -728,13 +728,13 @@
                     }).then((result) => {
                     if (result.value) {
                             let me = this;
-                        axios.put('/ingreso/desactivar',{
+                        axios.put('/venta/desactivar',{
                         'id': id
                         }).then(function (response) {
-                            me.listarIngreso(1,'','num_comprobante');
+                            me.listarVenta(1,'','num_comprobante');
                             swalWithBootstrapButtons(
                         'Anulado!',
-                        'El ingreso ha sido desactivado con exito.',
+                        'La venta ha sido anulada con exito.',
                         'success'
                         )
                         }).catch(function (error) {

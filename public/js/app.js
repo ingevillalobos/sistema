@@ -47270,7 +47270,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 console.log(error);
             });
         },
-        desactivarIngreso: function desactivarIngreso(id) {
+        desactivarVenta: function desactivarVenta(id) {
             var _this = this;
 
             var swalWithBootstrapButtons = swal.mixin({
@@ -47279,7 +47279,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 buttonsStyling: false
             });
             swalWithBootstrapButtons({
-                title: 'Estas seguro de desactivar este ingreso?',
+                title: 'Estas seguro de desactivar esta venta?',
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Aceptar',
@@ -47288,11 +47288,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }).then(function (result) {
                 if (result.value) {
                     var me = _this;
-                    axios.put('/ingreso/desactivar', {
+                    axios.put('/venta/desactivar', {
                         'id': id
                     }).then(function (response) {
-                        me.listarIngreso(1, '', 'num_comprobante');
-                        swalWithBootstrapButtons('Anulado!', 'El ingreso ha sido desactivado con exito.', 'success');
+                        me.listarVenta(1, '', 'num_comprobante');
+                        swalWithBootstrapButtons('Anulado!', 'La venta ha sido anulada con exito.', 'success');
                     }).catch(function (error) {
                         console.log(error);
                     });
