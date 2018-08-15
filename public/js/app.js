@@ -35240,6 +35240,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -35438,6 +35441,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 // Read more about handling dismissals
                 result.dismiss === swal.DismissReason.cancel) {}
             });
+        },
+        cargarPdf: function cargarPdf() {
+            window.open('http://sistema.test/articulo/listarPdf', '_blank');
         },
         validarArticulo: function validarArticulo() {
             this.errorArticulo = 0;
@@ -38279,6 +38285,23 @@ var render = function() {
             [
               _c("i", { staticClass: "icon-plus" }),
               _vm._v(" Nuevo\n                ")
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-info",
+              attrs: { type: "button" },
+              on: {
+                click: function($event) {
+                  _vm.cargarPdf()
+                }
+              }
+            },
+            [
+              _c("i", { staticClass: "icon-doc" }),
+              _vm._v(" Reporte\n                ")
             ]
           )
         ]),
