@@ -247,14 +247,14 @@
                         </div>
                         </template>
                         <!-- Fin Detalles -->
-                        <!-- Ver ingreso -->
+                        <!-- Ver Venta-->
                         <template v-else-if="listado==2">
                         <div class="card-body">
                             <div class="form-group row border">
                                 <div class="col-md-9">
                                     <div class="form-group">
-                                        <label for="">Proveedor</label>
-                                      <p v-text="proveedor"></p>
+                                        <label for="">Cliente</label>
+                                      <p v-text="cliente"></p>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -288,6 +288,7 @@
                                                 <th>Articulo</th>
                                                 <th>Precio</th>
                                                 <th>Cantidad</th>
+                                                <th>Descuento</th>
                                                 <th>Subtotal</th>
                                             </tr>
                                         </thead>
@@ -299,26 +300,27 @@
                                                 </td>
                                                 <td v-text="detalle.cantidad">
                                                 </td>
+                                                <td v-text="detalle.descuento"></td>
                                                 <td>
-                                                    {{ detalle.precio * detalle.cantidad}}
+                                                    {{ detalle.precio * detalle.cantidad - detalle.descuento}}
                                                 </td>
                                             </tr>
                                             <tr style="background-color: #CEECF5">
-                                                <td colspan="3" align="right"><strong>Total Parcial:</strong></td>
+                                                <td colspan="4" align="right"><strong>Total Parcial:</strong></td>
                                                 <td>$ {{totalParcial=(total-totalImpuesto).toFixed(2)}}</td>
                                             </tr>
                                             <tr style="background-color: #CEECF5">
-                                                <td colspan="3" align="right"><strong>Total Impuesto:</strong></td>
+                                                <td colspan="4" align="right"><strong>Total Impuesto:</strong></td>
                                                 <td>$ {{totalImpuesto=((total*impuesto)).toFixed(2)}}</td>
                                             </tr>
                                                 <tr style="background-color: #CEECF5">
-                                                <td colspan="3" align="right"><strong>Total:</strong></td>
+                                                <td colspan="4" align="right"><strong>Total:</strong></td>
                                                 <td>$ {{total}}</td>
                                             </tr>
                                         </tbody>
                                         <tbody v-else>
                                             <tr>
-                                                <td colspan="4">
+                                                <td colspan="5">
                                                     No hay articulos agregados
                                                 </td>
                                             </tr>
@@ -333,7 +335,7 @@
                             </div>
                         </div>
                         </template>
-                        <!-- Fin ver ingreso -->
+                        <!-- Fin ver venta -->
                     </div>
                     <!-- Fin ejemplo de tabla Listado -->
                 </div>
@@ -604,7 +606,7 @@
                         me.articulo="";
                         me.precio=0;
                         me.cantidad=0;
-                        me.descueno=0;
+                        me.descuento=0;
                         me.stock=0;
                        }
                         }                  
@@ -826,32 +828,32 @@
                 ocultarDetalle(){
                     this.listado = 1;
                 },
-                verIngreso(id){
+                verVenta(id){
                     let me = this;
                     me.listado = 2;
 
-                    //Obtener datos del ingreso
-                    var arrayIngresoTemp=[];
-                    var url = '/ingreso/obtenerCabecera?id=' + id;
+                    //Obtener datos de venta
+                    var arrayVentaTemp=[];
+                    var url = '/venta/obtenerCabecera?id=' + id;
 
                     axios.get(url).then(function (response) {
                         var respuesta = response.data;
-                        arrayIngresoTemp = respuesta.ingreso;
+                        arrayVentaTemp = respuesta.venta;
                         
-                        me.proveedor = arrayIngresoTemp[0]['nombre'];
-                        me.tipo_comprobante = arrayIngresoTemp[0]['tipo_comprobante'];
-                        me.serie_comprobante = arrayIngresoTemp[0]['serie_comprobante'];
-                        me.num_comprobante = arrayIngresoTemp[0]['num_comprobante'];
-                        me.total = arrayIngresoTemp[0]['total'];
-                        me.impuesto = arrayIngresoTemp[0]['impuesto'];
-                        me.total = arrayIngresoTemp[0]['total'];
+                        me.cliente = arrayVentaTemp[0]['nombre'];
+                        me.tipo_comprobante = arrayVentaTemp[0]['tipo_comprobante'];
+                        me.serie_comprobante = arrayVentaTemp[0]['serie_comprobante'];
+                        me.num_comprobante = arrayVentaTemp[0]['num_comprobante'];
+                        me.total = arrayVentaTemp[0]['total'];
+                        me.impuesto = arrayVentaTemp[0]['impuesto'];
+                        me.total = arrayVentaTemp[0]['total'];
                     })
                     .catch(function (error) {
                         console.log(error);
                     });
 
                     //Obtener los datos de los detalles
-                    var urldetalles = '/ingreso/obtenerDetalles?id=' + id;
+                    var urldetalles = '/venta/obtenerDetalles?id=' + id;
 
                     axios.get(urldetalles).then(function (response) {
                         var respuesta = response.data;
