@@ -47002,6 +47002,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -47111,6 +47115,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }).catch(function (error) {
                 console.log(error);
             });
+        },
+        pdfVenta: function pdfVenta(id) {
+            window.open('http://sistema.test/venta/pdf/' + id + ',' + '_blank');
         },
         getDatosCliente: function getDatosCliente(val1) {
             var me = this;
@@ -47264,6 +47271,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 me.codigo = '';
                 me.descuento = 0;
                 me.arrayDetalle = [];
+                window.open('http://sistema.test/venta/pdf/' + response.data.id + ',' + '_blank');
             }).catch(function (error) {
                 console.log(error);
             });
@@ -47615,6 +47623,22 @@ var render = function() {
                                       }
                                     },
                                     [_c("i", { staticClass: "icon-eye" })]
+                                  ),
+                                  _vm._v(
+                                    "\n                                 \n                                "
+                                  ),
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass: "btn btn-info btn-sm",
+                                      attrs: { type: "button" },
+                                      on: {
+                                        click: function($event) {
+                                          _vm.pdfVenta(venta.id)
+                                        }
+                                      }
+                                    },
+                                    [_c("i", { staticClass: "icon-doc" })]
                                   ),
                                   _vm._v(
                                     "\n                                 \n                        "
