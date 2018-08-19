@@ -44,7 +44,7 @@
                     </template>
             
                     <template v-if="menu==10">
-                        <h1>Reporte de ventas</h1>
+                        <consultaventa></consultaventa>
                     </template>
             
                     <template v-if="menu==11">
@@ -68,7 +68,7 @@
                 </template>
 
                 <template v-if="menu==10">
-                        <h1>Reporte de ventas</h1>
+                    <consultaventa></consultaventa>
                     </template>
         
                     <template v-if="menu==11">
@@ -101,7 +101,7 @@
                 </template>
 
                 <template v-if="menu==9">
-                    <consultaingreso></consultaingreso> 
+                    <consultaingreso></consultaingreso>
                     </template>
 
                 <template v-if="menu==11">
